@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+const { REACT_APP_API_URL } = process.env;
 
 const Register = ({ onRouteChange, loadUser }) => {
   const [signInName, setSignInName] = useState("");
@@ -18,7 +19,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   };
 
   const onSubmitRegister = () => {
-    fetch("https://face-detection-api-3nk6.onrender.com/register", {
+    fetch(`${REACT_APP_API_URL}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

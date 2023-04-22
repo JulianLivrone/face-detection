@@ -6,6 +6,8 @@ import FaceDetection from "./components/FaceDetection/FaceDetection";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 import { useState } from "react";
+const { REACT_APP_API_URL } = process.env;
+console.log(REACT_APP_API_URL);
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -66,7 +68,7 @@ const App = () => {
 
   const onButtonSubmit = () => {
     setImageUrl(input);
-    fetch("https://face-detection-api-3nk6.onrender.com/imageUrl", {
+    fetch(`${REACT_APP_API_URL}/imageUrl`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -76,7 +78,7 @@ const App = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
-          fetch("https://face-detection-api-3nk6.onrender.com/image", {
+          fetch(`${REACT_APP_API_URL}/image`, {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
