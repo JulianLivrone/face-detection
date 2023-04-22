@@ -7,6 +7,7 @@ import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 import { useState } from "react";
 const { REACT_APP_API_URL } = process.env;
+console.log(process.env);
 console.log(REACT_APP_API_URL);
 
 const App = () => {
