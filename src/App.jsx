@@ -78,7 +78,6 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setIsLoading(false);
         if (data) {
           fetch(`${REACT_APP_API_URL}/image`, {
             method: "put",
@@ -90,6 +89,7 @@ const App = () => {
             .then((response) => response.json())
             .then((count) => {
               setUser({ ...user, entries: count });
+              setIsLoading(false);
             })
             .catch((err) => console.log(err));
           displayFaceBox(calculateFaceLocation(data));
