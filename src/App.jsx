@@ -5,7 +5,8 @@ import Rank from "./components/Rank/Rank";
 import FaceDetection from "./components/FaceDetection/FaceDetection";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 const { REACT_APP_API_URL } = process.env;
 
 const App = () => {
@@ -23,6 +24,11 @@ const App = () => {
     joined: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // to get the server running if it is idle
+    fetch(`${REACT_APP_API_URL}/`);
+  }, []);
 
   const loadUser = (user) => {
     setUser({
