@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Loading from "../Loading/Loading";
+import { isEmailValid, isPasswordValid } from "../Utils/Utils";
+
 const { REACT_APP_API_URL } = process.env;
 
 const Signin = ({ onRouteChange, loadUser }) => {
@@ -18,10 +20,10 @@ const Signin = ({ onRouteChange, loadUser }) => {
   };
 
   const inputsAreValid = () => {
-    if (!signInEmail || !signInPassword) {
-      return false;
+    if (isEmailValid(signInEmail) && isPasswordValid(signInPassword)) {
+      return true;
     }
-    return true;
+    return false;
   };
 
   const onSubmitSignIn = () => {
@@ -53,7 +55,6 @@ const Signin = ({ onRouteChange, loadUser }) => {
       setAllInputsAreValid(false);
     }
   };
-  console.log(allInputsAreValid);
 
   return (
     <article className='br3 bab--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-1 center'>
@@ -71,6 +72,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
                 type='email'
                 name='email-address'
                 id='email-address'
+                placeholder='email@address.com'
               />
             </div>
             <div className='mv3'>
@@ -83,6 +85,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
                 type='password'
                 name='password'
                 id='password'
+                placeholder='Minimun 4 characters'
               />
             </div>
           </fieldset>

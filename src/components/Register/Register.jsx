@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Loading from "../Loading/Loading";
+import { isNameValid, isEmailValid, isPasswordValid } from "../Utils/Utils";
+
 const { REACT_APP_API_URL } = process.env;
 
 const Register = ({ onRouteChange, loadUser }) => {
@@ -23,10 +25,14 @@ const Register = ({ onRouteChange, loadUser }) => {
   };
 
   const inputsAreValid = () => {
-    if (!signInName || !signInEmail || !signInPassword) {
-      return false;
+    if (
+      isNameValid(signInName) &&
+      isEmailValid(signInEmail) &&
+      isPasswordValid(signInPassword)
+    ) {
+      return true;
     }
-    return true;
+    return false;
   };
 
   const onSubmitRegister = () => {
@@ -76,6 +82,7 @@ const Register = ({ onRouteChange, loadUser }) => {
                 type='text'
                 name='name-address'
                 id='name-address'
+                placeholder='Only letters'
               />
             </div>
             <div className='mt3'>
@@ -88,6 +95,7 @@ const Register = ({ onRouteChange, loadUser }) => {
                 type='email'
                 name='email-address'
                 id='email-address'
+                placeholder='email@address.com'
               />
             </div>
             <div className='mv3'>
@@ -100,6 +108,7 @@ const Register = ({ onRouteChange, loadUser }) => {
                 type='password'
                 name='password'
                 id='password'
+                placeholder='Minimun 4 characters'
               />
             </div>
           </fieldset>
