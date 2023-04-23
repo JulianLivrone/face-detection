@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import Loading from "../Loading/Loading";
 const { REACT_APP_API_URL } = process.env;
 
 const Signin = ({ onRouteChange, loadUser }) => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
@@ -13,6 +15,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
   };
 
   const onSubmitSignIn = () => {
+    setIsLoading(true);
     fetch(`${REACT_APP_API_URL}/signin`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -23,6 +26,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
     })
       .then((response) => response.json())
       .then((user) => {
+        setIsLoading(false);
         if (user.id) {
           loadUser(user);
           onRouteChange("home");
@@ -70,6 +74,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
             />
           </div>
         </div>
+        {isLoading ? <Loading /> : null}
       </main>
     </article>
   );

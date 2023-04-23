@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import Loading from "../Loading/Loading";
 const { REACT_APP_API_URL } = process.env;
 
 const Register = ({ onRouteChange, loadUser }) => {
   const [signInName, setSignInName] = useState("");
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onNameChange = (event) => {
     setSignInName(event.target.value);
@@ -19,6 +21,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   };
 
   const onSubmitRegister = () => {
+    setIsLoading(true);
     fetch(`${REACT_APP_API_URL}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -30,6 +33,7 @@ const Register = ({ onRouteChange, loadUser }) => {
     })
       .then((response) => response.json())
       .then((user) => {
+        setIsLoading(false);
         if (user.id) {
           loadUser(user);
           onRouteChange("home");
@@ -88,6 +92,7 @@ const Register = ({ onRouteChange, loadUser }) => {
             />
           </div>
         </div>
+        {isLoading ? <Loading /> : null}
       </main>
     </article>
   );

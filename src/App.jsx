@@ -22,6 +22,7 @@ const App = () => {
     entries: 0,
     joined: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadUser = (user) => {
     setUser({
@@ -67,6 +68,7 @@ const App = () => {
 
   const onButtonSubmit = () => {
     setImageUrl(input);
+    setIsLoading(true);
     fetch(`${REACT_APP_API_URL}/imageUrl`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -76,6 +78,7 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        setIsLoading(false);
         if (data) {
           fetch(`${REACT_APP_API_URL}/image`, {
             method: "put",
@@ -95,20 +98,24 @@ const App = () => {
       .catch((err) => console.log(err));
   };
 
+  const setStateToDefaultValues = () => {
+    setIsSignedIn(false);
+    setInput("");
+    setImageUrl("");
+    setBox({});
+    setUser({
+      id: -1,
+      name: "",
+      email: "",
+      password: "",
+      entries: 0,
+      joined: "",
+    });
+  };
+
   const onRouteChange = (route) => {
     if (route === "signout") {
-      setIsSignedIn(false);
-      setInput("");
-      setImageUrl("");
-      setBox({});
-      setUser({
-        id: -1,
-        name: "",
-        email: "",
-        password: "",
-        entries: 0,
-        joined: "",
-      });
+      setStateToDefaultValues();
     } else if (route === "home") {
       setIsSignedIn(true);
     }
@@ -121,7 +128,11 @@ const App = () => {
       {route === "home" ? (
         <div>
           {" "}
-          <Rank userName={user.name} userEntries={user.entries} />
+          <Rank
+            userName={user.name}
+            userEntries={user.entries}
+            isLoading={isLoading}
+          />
           <ImageLinkForm
             onInputChange={onInputChange}
             onButtonSubmit={onButtonSubmit}
