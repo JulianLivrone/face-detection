@@ -7,38 +7,53 @@ const Signin = ({ onRouteChange, loadUser }) => {
   const [signInPassword, setSignInPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
+  const [allInputsAreValid, setAllInputsAreValid] = useState(true);
 
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
   };
+
   const onPasswordChange = (event) => {
     setSignInPassword(event.target.value);
   };
 
-  const onSubmitSignIn = () => {
-    setIsLoading(true);
-    setWrongCredentials(false);
-    fetch(`${REACT_APP_API_URL}/signin`, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: signInEmail,
-        password: signInPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIsLoading(false);
-        if (data.id) {
-          loadUser(data);
-          onRouteChange("home");
-        } else {
-          setWrongCredentials(true);
-          throw new Error(data);
-        }
-      })
-      .catch((err) => console.log(err));
+  const inputsAreValid = () => {
+    if (!signInEmail || !signInPassword) {
+      return false;
+    }
+    return true;
   };
+
+  const onSubmitSignIn = () => {
+    setAllInputsAreValid(true);
+    setWrongCredentials(false);
+    if (inputsAreValid()) {
+      setIsLoading(true);
+      fetch(`${REACT_APP_API_URL}/signin`, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: signInEmail,
+          password: signInPassword,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setIsLoading(false);
+          if (data.id) {
+            loadUser(data);
+            onRouteChange("home");
+          } else {
+            setWrongCredentials(true);
+            throw new Error(data);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setAllInputsAreValid(false);
+    }
+  };
+  console.log(allInputsAreValid);
 
   return (
     <article className='br3 bab--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-1 center'>
@@ -82,6 +97,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
         </div>
         {isLoading ? <Loading /> : null}
         {wrongCredentials ? <p>Wrong credentials</p> : null}
+        {allInputsAreValid ? null : <p>Fill all inputs correctly</p>}
       </main>
     </article>
   );

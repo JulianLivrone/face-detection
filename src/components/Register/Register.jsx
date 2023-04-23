@@ -8,6 +8,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   const [signInPassword, setSignInPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [emailAlreadyInUse, setEmailAlreadyInUse] = useState(false);
+  const [allInputsAreValid, setAllInputsAreValid] = useState(true);
 
   const onNameChange = (event) => {
     setSignInName(event.target.value);
@@ -21,30 +22,42 @@ const Register = ({ onRouteChange, loadUser }) => {
     setSignInPassword(event.target.value);
   };
 
+  const inputsAreValid = () => {
+    if (!signInName || !signInEmail || !signInPassword) {
+      return false;
+    }
+    return true;
+  };
+
   const onSubmitRegister = () => {
-    setIsLoading(true);
+    setAllInputsAreValid(true);
     setEmailAlreadyInUse(false);
-    fetch(`${REACT_APP_API_URL}/register`, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: signInName,
-        email: signInEmail,
-        password: signInPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setIsLoading(false);
-        if (data.id) {
-          loadUser(data);
-          onRouteChange("home");
-        } else {
-          setEmailAlreadyInUse(true);
-          throw new Error(data);
-        }
+    if (inputsAreValid()) {
+      setIsLoading(true);
+      fetch(`${REACT_APP_API_URL}/register`, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: signInName,
+          email: signInEmail,
+          password: signInPassword,
+        }),
       })
-      .catch((err) => console.log(err));
+        .then((response) => response.json())
+        .then((data) => {
+          setIsLoading(false);
+          if (data.id) {
+            loadUser(data);
+            onRouteChange("home");
+          } else {
+            setEmailAlreadyInUse(true);
+            throw new Error(data);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setAllInputsAreValid(false);
+    }
   };
 
   return (
@@ -101,6 +114,7 @@ const Register = ({ onRouteChange, loadUser }) => {
         </div>
         {isLoading ? <Loading /> : null}
         {emailAlreadyInUse ? <p>Email already in use</p> : null}
+        {allInputsAreValid ? null : <p>Fill all inputs correctly</p>}
       </main>
     </article>
   );
