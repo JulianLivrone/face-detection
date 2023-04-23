@@ -6,7 +6,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [wrongCredentials, setWrongCredentials] = useState(false);
 
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
@@ -17,7 +17,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
 
   const onSubmitSignIn = () => {
     setIsLoading(true);
-    setHasError(false);
+    setWrongCredentials(false);
     fetch(`${REACT_APP_API_URL}/signin`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -33,7 +33,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
           loadUser(data);
           onRouteChange("home");
         } else {
-          setHasError(true);
+          setWrongCredentials(true);
           throw new Error(data);
         }
       })
@@ -81,7 +81,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
           </div>
         </div>
         {isLoading ? <Loading /> : null}
-        {hasError ? <p>Wrong credentials</p> : null}
+        {wrongCredentials ? <p>Wrong credentials</p> : null}
       </main>
     </article>
   );

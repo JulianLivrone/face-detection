@@ -7,6 +7,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailAlreadyInUse, setEmailAlreadyInUse] = useState(false);
 
   const onNameChange = (event) => {
     setSignInName(event.target.value);
@@ -22,6 +23,7 @@ const Register = ({ onRouteChange, loadUser }) => {
 
   const onSubmitRegister = () => {
     setIsLoading(true);
+    setEmailAlreadyInUse(false);
     fetch(`${REACT_APP_API_URL}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -32,14 +34,19 @@ const Register = ({ onRouteChange, loadUser }) => {
       }),
     })
       .then((response) => response.json())
-      .then((user) => {
+      .then((data) => {
         setIsLoading(false);
-        if (user.id) {
-          loadUser(user);
+        if (data.id) {
+          loadUser(data);
           onRouteChange("home");
+        } else {
+          setEmailAlreadyInUse(true);
+          throw new Error(data);
         }
-      });
+      })
+      .catch((err) => console.log(err));
   };
+
   return (
     <article className='br3 bab--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-1 center'>
       <main className='pa4 black-80'>
@@ -93,6 +100,7 @@ const Register = ({ onRouteChange, loadUser }) => {
           </div>
         </div>
         {isLoading ? <Loading /> : null}
+        {emailAlreadyInUse ? <p>Email already in use</p> : null}
       </main>
     </article>
   );
