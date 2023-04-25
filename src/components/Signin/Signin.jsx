@@ -101,7 +101,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
         </div>
 
         {isLoading ? <Loading /> : null}
-        {wrongCredentials ? <p>Wrong credentials</p> : null}
+        {wrongCredentials ? <p>Wrong email and/or password</p> : null}
         {allInputsAreValid ? null : <p>Fill all inputs correctly</p>}
       </main>
     </article>
