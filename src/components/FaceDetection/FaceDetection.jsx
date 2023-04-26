@@ -3,8 +3,8 @@ import "./FaceDetection.css";
 
 const FaceDetection = ({ imageUrl, box }) => {
   return (
-    <div className='center ma'>
-      <div className='absolute mt2'>
+    <div className='container'>
+      <div className='div_bounding-box'>
         <img
           id='inputImage'
           src={imageUrl}
@@ -19,7 +19,8 @@ const FaceDetection = ({ imageUrl, box }) => {
             right: box.rightCol,
             bottom: box.bottomRow,
             left: box.leftCol,
-          }}></div>
+          }}
+        ></div>
       </div>
     </div>
   );
