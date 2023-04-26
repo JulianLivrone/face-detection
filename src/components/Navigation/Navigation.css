@@ -1,0 +1,17 @@
+.nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-text {
+  color: black;
+  padding: 1em;
+  cursor: pointer;
+  font-size: 1.5em;
+  text-decoration: underline;
+  transition: opacity 0.25s ease-out;
+}
+
+.nav-text:hover {
+  opacity: 0.5;
+}
