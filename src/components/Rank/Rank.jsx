@@ -4,8 +4,12 @@ import Loading from "../Loading/Loading";
 const Rank = ({ userName, userEntries, isLoading }) => {
   return (
     <div>
-      <div className='white f3'>{`${userName}, your current entry count is...`}</div>
-      <div className='white f1'>{isLoading ? <Loading /> : userEntries}</div>
+      <div
+        style={{ color: "white", fontSize: "1.75em" }}
+      >{`${userName}, your current entry count is...`}</div>
+      <div style={{ color: "white", fontSize: "3em" }}>
+        {isLoading ? <Loading /> : userEntries}
+      </div>
     </div>
   );
 };
