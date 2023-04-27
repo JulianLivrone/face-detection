@@ -15,7 +15,6 @@ Backend: https://github.com/JulianLivrone/face-detection-api
 ### Frontend
 
 - React (frontend)
-- Tachyons (CSS toolkit)
 
 ### Backend
 
