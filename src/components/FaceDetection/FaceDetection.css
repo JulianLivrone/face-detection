@@ -4,12 +4,12 @@
   align-items: flex-start;
 }
 
-.div_bounding-box {
+.div_bounding-boxes {
   position: absolute;
   margin: 1em;
 }
 
-.bounding-box {
+.bounding-boxes {
   position: absolute;
   box-shadow: 0 0 0 3px #149df2 inset;
   display: flex;

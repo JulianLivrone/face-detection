@@ -1,10 +1,10 @@
 import React from "react";
 import "./FaceDetection.css";
 
-const FaceDetection = ({ imageUrl, box }) => {
+const FaceDetection = ({ imageUrl, boxes }) => {
   return (
     <div className='container'>
-      <div className='div_bounding-box'>
+      <div className='div_bounding-boxes'>
         <img
           id='inputImage'
           src={imageUrl}
@@ -12,15 +12,20 @@ const FaceDetection = ({ imageUrl, box }) => {
           width='500px'
           height='auto'
         />
-        <div
-          className='bounding-box'
-          style={{
-            top: box.topRow,
-            right: box.rightCol,
-            bottom: box.bottomRow,
-            left: box.leftCol,
-          }}
-        ></div>
+        {boxes.map((box, i) => {
+          return (
+            <div
+              key={i}
+              className='bounding-boxes'
+              style={{
+                top: box.topRow,
+                right: box.rightCol,
+                bottom: box.bottomRow,
+                left: box.leftCol,
+              }}
+            ></div>
+          );
+        })}
       </div>
     </div>
   );

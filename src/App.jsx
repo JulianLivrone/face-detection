@@ -12,7 +12,7 @@ const { REACT_APP_API_URL } = process.env;
 const App = () => {
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [box, setBox] = useState({});
+  const [boxes, setBoxes] = useState([]);
   const [route, setRoute] = useState("signin");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState({
@@ -40,32 +40,33 @@ const App = () => {
     });
   };
 
-  const calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById("inputImage");
-    const width = Number(image.width); // total width of the image, for example: 100px
-    const height = Number(image.height); // total height of the image, for example: 100px
-    return {
-      // clarifaiFace.left_col is a percentage from the left of the image, so the left column starts
-      // at 0.22 * 100px = 22px
-      leftCol: clarifaiFace.left_col * width,
-      // clarifaiFace.top_row is a percentage from the top of the image, so the top row starts
-      // at 0.10 * 100px = 10px
-      topRow: clarifaiFace.top_row * height,
-      // clarifaiFace.right_col is a percentage from the right of the image, this changes a little
-      // bit our math because we have to consider the (0,0) as the top left of the image so
-      // the right column starts at 100px - 0.30 * 100px = 70px from the left
-      rightCol: width - clarifaiFace.right_col * width,
-      // clarifaiFace.bottom_row is a percentage from the bottom of the image, this changes a little
-      // bit our math because we have to consider the (0,0) as the top left of the image so
-      // the bottom row starts at 100px - 0.2 * 100px = 80px from the top
-      bottomRow: height - clarifaiFace.bottom_row * height,
-    };
+  const calculateFacesLocations = (data) => {
+    return data.outputs[0].data.regions.map((face) => {
+      const clarifaiFace = face.region_info.bounding_box;
+      const image = document.getElementById("inputImage");
+      const width = Number(image.width); // total width of the image, for example: 100px
+      const height = Number(image.height); // total height of the image, for example: 100px
+      return {
+        // clarifaiFace.left_col is a percentage from the left of the image, so the left column starts
+        // at 0.22 * 100px = 22px
+        leftCol: clarifaiFace.left_col * width,
+        // clarifaiFace.top_row is a percentage from the top of the image, so the top row starts
+        // at 0.10 * 100px = 10px
+        topRow: clarifaiFace.top_row * height,
+        // clarifaiFace.right_col is a percentage from the right of the image, this changes a little
+        // bit our math because we have to consider the (0,0) as the top left of the image so
+        // the right column starts at 100px - 0.30 * 100px = 70px from the left
+        rightCol: width - clarifaiFace.right_col * width,
+        // clarifaiFace.bottom_row is a percentage from the bottom of the image, this changes a little
+        // bit our math because we have to consider the (0,0) as the top left of the image so
+        // the bottom row starts at 100px - 0.2 * 100px = 80px from the top
+        bottomRow: height - clarifaiFace.bottom_row * height,
+      };
+    });
   };
 
-  const displayFaceBox = (box) => {
-    setBox(box);
+  const displayFacesBoxes = (boxes) => {
+    setBoxes(boxes);
   };
 
   const onInputChange = (e) => {
@@ -98,7 +99,7 @@ const App = () => {
               setIsLoading(false);
             })
             .catch((err) => console.log(err));
-          displayFaceBox(calculateFaceLocation(data));
+          displayFacesBoxes(calculateFacesLocations(data));
         }
       })
       .catch((err) => console.log(err));
@@ -108,7 +109,7 @@ const App = () => {
     setIsSignedIn(false);
     setInput("");
     setImageUrl("");
-    setBox({});
+    setBoxes({});
     setUser({
       id: -1,
       name: "",
@@ -143,7 +144,7 @@ const App = () => {
             onInputChange={onInputChange}
             onButtonSubmit={onButtonSubmit}
           />
-          <FaceDetection imageUrl={imageUrl} box={box} user={user} />
+          <FaceDetection imageUrl={imageUrl} boxes={boxes} user={user} />
         </div>
       ) : route === "signin" ? (
         <Signin onRouteChange={onRouteChange} loadUser={loadUser} />
