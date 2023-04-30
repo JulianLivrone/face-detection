@@ -67,6 +67,12 @@ const Register = ({ onRouteChange, loadUser }) => {
     }
   };
 
+  const onKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onSubmitRegister();
+    }
+  };
+
   return (
     <article className='article'>
       <main className='main'>
@@ -78,6 +84,7 @@ const Register = ({ onRouteChange, loadUser }) => {
             </label>
             <input
               onChange={onNameChange}
+              onKeyDown={onKeyDown}
               className='input-text'
               type='text'
               name='name-address'
@@ -91,6 +98,7 @@ const Register = ({ onRouteChange, loadUser }) => {
             </label>
             <input
               onChange={onEmailChange}
+              onKeyDown={onKeyDown}
               className='input-text'
               type='email'
               name='email-address'
@@ -104,6 +112,7 @@ const Register = ({ onRouteChange, loadUser }) => {
             </label>
             <input
               onChange={onPasswordChange}
+              onKeyDown={onKeyDown}
               className='input-text'
               type='password'
               name='password'
