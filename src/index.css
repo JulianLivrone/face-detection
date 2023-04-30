@@ -1,19 +1,12 @@
 body {
   margin: 0;
   font-family: "Courier New", "Courier", monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #16bffd; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #cb3066,
-    #16bffd
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: rgb(0, 0, 0);
   background: linear-gradient(
-    to right,
-    #cb3066,
-    #16bffd
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }
 
 button {

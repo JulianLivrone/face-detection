@@ -8,8 +8,8 @@
   padding: 1em;
   cursor: pointer;
   font-size: 1.5em;
-  text-decoration: underline;
   transition: opacity 0.25s ease-out;
+  font-weight: bold;
 }
 
 .nav-text:hover {

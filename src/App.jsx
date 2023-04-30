@@ -109,7 +109,7 @@ const App = () => {
     setIsSignedIn(false);
     setInput("");
     setImageUrl("");
-    setBoxes({});
+    setBoxes([]);
     setUser({
       id: -1,
       name: "",
