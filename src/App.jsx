@@ -133,8 +133,14 @@ const App = () => {
     <div className='App'>
       <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
       {route === "home" ? (
-        <div>
-          {" "}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            width: "50%",
+          }}
+        >
           <Rank
             userName={user.name}
             userEntries={user.entries}

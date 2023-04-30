@@ -5,11 +5,6 @@
   align-items: center;
 }
 
-.app-description {
-  font-size: 1.5em;
-  color: white;
-}
-
 .form {
   background-size: 40px 60px;
   background: linear-gradient(
@@ -39,7 +34,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 50%;
+  width: 100%;
 }
 
 .button {

@@ -110,7 +110,7 @@ const Signin = ({ onRouteChange, loadUser }) => {
 
         {isLoading ? <Loading /> : null}
         {wrongCredentials ? <p>Wrong email and/or password</p> : null}
-        {allInputsAreValid ? null : <p>Fill all inputs correctly</p>}
+        {allInputsAreValid ? null : <p>Fill all fields correctly</p>}
       </main>
     </article>
   );

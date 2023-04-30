@@ -132,7 +132,7 @@ const Register = ({ onRouteChange, loadUser }) => {
 
         {isLoading ? <Loading /> : null}
         {emailAlreadyInUse ? <p>Email already in use</p> : null}
-        {allInputsAreValid ? null : <p>Fill all inputs correctly</p>}
+        {allInputsAreValid ? null : <p>Fill all fields correctly</p>}
       </main>
     </article>
   );
