@@ -9,7 +9,7 @@ const FaceDetection = ({ imageUrl, boxes }) => {
           id='inputImage'
           src={imageUrl}
           alt=''
-          width='500px'
+          width='650px'
           height='auto'
         />
         {boxes.map((box, i) => {

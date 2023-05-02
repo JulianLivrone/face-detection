@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  margin-bottom: 35%;
 }
 
 .div_bounding-boxes {
