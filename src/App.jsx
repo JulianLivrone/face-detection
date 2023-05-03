@@ -6,6 +6,8 @@ import FaceDetection from "./components/FaceDetection/FaceDetection";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 import { useState, useEffect } from "react";
+import Modal from "./components/Modal/Modal";
+import Profile from "./components/Profile/Profile";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -15,6 +17,7 @@ const App = () => {
   const [boxes, setBoxes] = useState([]);
   const [route, setRoute] = useState("signin");
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState({
     id: -1,
     name: "",
@@ -22,12 +25,44 @@ const App = () => {
     password: "",
     entries: 0,
     joined: "",
+    pet: "",
+    age: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // to get the server running if it is idle
     fetch(`${REACT_APP_API_URL}/`);
+    const token = window.sessionStorage.getItem("token");
+    if (token) {
+      fetch(`${REACT_APP_API_URL}/signin`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.id) {
+            fetch(`${REACT_APP_API_URL}/profile/${data.id}`, {
+              method: "get",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+              },
+            })
+              .then((response) => response.json())
+              .then((user) => {
+                if (user && user.email) {
+                  loadUser(user);
+                  onRouteChange("home");
+                }
+              });
+          }
+        })
+        .catch(console.log);
+    }
   }, []);
 
   const loadUser = (user) => {
@@ -41,32 +76,37 @@ const App = () => {
   };
 
   const calculateFacesLocations = (data) => {
-    return data.outputs[0].data.regions.map((face) => {
-      const clarifaiFace = face.region_info.bounding_box;
-      const image = document.getElementById("inputImage");
-      const width = Number(image.width); // total width of the image, for example: 100px
-      const height = Number(image.height); // total height of the image, for example: 100px
-      return {
-        // clarifaiFace.left_col is a percentage from the left of the image, so the left column starts
-        // at 0.22 * 100px = 22px
-        leftCol: clarifaiFace.left_col * width,
-        // clarifaiFace.top_row is a percentage from the top of the image, so the top row starts
-        // at 0.10 * 100px = 10px
-        topRow: clarifaiFace.top_row * height,
-        // clarifaiFace.right_col is a percentage from the right of the image, this changes a little
-        // bit our math because we have to consider the (0,0) as the top left of the image so
-        // the right column starts at 100px - 0.30 * 100px = 70px from the left
-        rightCol: width - clarifaiFace.right_col * width,
-        // clarifaiFace.bottom_row is a percentage from the bottom of the image, this changes a little
-        // bit our math because we have to consider the (0,0) as the top left of the image so
-        // the bottom row starts at 100px - 0.2 * 100px = 80px from the top
-        bottomRow: height - clarifaiFace.bottom_row * height,
-      };
-    });
+    if (data && data.outputs) {
+      return data.outputs[0].data.regions.map((face) => {
+        const clarifaiFace = face.region_info.bounding_box;
+        const image = document.getElementById("inputImage");
+        const width = Number(image.width); // total width of the image, for example: 100px
+        const height = Number(image.height); // total height of the image, for example: 100px
+        return {
+          // clarifaiFace.left_col is a percentage from the left of the image, so the left column starts
+          // at 0.22 * 100px = 22px
+          leftCol: clarifaiFace.left_col * width,
+          // clarifaiFace.top_row is a percentage from the top of the image, so the top row starts
+          // at 0.10 * 100px = 10px
+          topRow: clarifaiFace.top_row * height,
+          // clarifaiFace.right_col is a percentage from the right of the image, this changes a little
+          // bit our math because we have to consider the (0,0) as the top left of the image so
+          // the right column starts at 100px - 0.30 * 100px = 70px from the left
+          rightCol: width - clarifaiFace.right_col * width,
+          // clarifaiFace.bottom_row is a percentage from the bottom of the image, this changes a little
+          // bit our math because we have to consider the (0,0) as the top left of the image so
+          // the bottom row starts at 100px - 0.2 * 100px = 80px from the top
+          bottomRow: height - clarifaiFace.bottom_row * height,
+        };
+      });
+    }
+    return;
   };
 
   const displayFacesBoxes = (boxes) => {
-    setBoxes(boxes);
+    if (boxes) {
+      setBoxes(boxes);
+    }
   };
 
   const onInputChange = (e) => {
@@ -78,7 +118,10 @@ const App = () => {
     setIsLoading(true);
     fetch(`${REACT_APP_API_URL}/imageUrl`, {
       method: "post",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.sessionStorage.getItem("token"),
+      },
       body: JSON.stringify({
         input: input,
       }),
@@ -88,7 +131,10 @@ const App = () => {
         if (data) {
           fetch(`${REACT_APP_API_URL}/image`, {
             method: "put",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: window.sessionStorage.getItem("token"),
+            },
             body: JSON.stringify({
               id: user.id,
             }),
@@ -106,10 +152,12 @@ const App = () => {
   };
 
   const setStateToDefaultValues = () => {
-    setIsSignedIn(false);
     setInput("");
     setImageUrl("");
     setBoxes([]);
+    setRoute("signin");
+    setIsSignedIn(false);
+    setIsProfileOpen(false);
     setUser({
       id: -1,
       name: "",
@@ -117,21 +165,41 @@ const App = () => {
       password: "",
       entries: 0,
       joined: "",
+      pet: "",
+      age: "",
     });
   };
 
   const onRouteChange = (route) => {
     if (route === "signout") {
-      setStateToDefaultValues();
+      return setStateToDefaultValues();
     } else if (route === "home") {
       setIsSignedIn(true);
     }
     setRoute(route);
   };
 
+  const toggleModal = () => {
+    setIsProfileOpen((prevIsProfileOpen) => !prevIsProfileOpen);
+  };
+
   return (
     <div className='App'>
-      <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
+      <Navigation
+        isSignedIn={isSignedIn}
+        onRouteChange={onRouteChange}
+        toggleModal={toggleModal}
+      />
+      {isProfileOpen ? (
+        <Modal>
+          <Profile
+            isProfileOpen={isProfileOpen}
+            toggleModal={toggleModal}
+            user={user}
+            loadUser={loadUser}
+          />
+        </Modal>
+      ) : null}
       {route === "home" ? (
         <div
           style={{

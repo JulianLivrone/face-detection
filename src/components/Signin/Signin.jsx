@@ -27,6 +27,10 @@ const Signin = ({ onRouteChange, loadUser }) => {
     return false;
   };
 
+  const saveAuthTokenInSession = (token) => {
+    window.sessionStorage.setItem("token", token);
+  };
+
   const onSubmitSignIn = () => {
     setAllInputsAreValid(true);
     setWrongCredentials(false);
@@ -43,11 +47,24 @@ const Signin = ({ onRouteChange, loadUser }) => {
         .then((response) => response.json())
         .then((data) => {
           setIsLoading(false);
-          if (data.id) {
-            loadUser(data);
+          if (data.userId && data.success === "true") {
+            saveAuthTokenInSession(data.token);
             setSignInEmail("");
             setSignInPassword("");
-            onRouteChange("home");
+            fetch(`${REACT_APP_API_URL}/profile/${data.userId}`, {
+              method: "get",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: data.token,
+              },
+            })
+              .then((response) => response.json())
+              .then((user) => {
+                if (user && user.email) {
+                  loadUser(user);
+                  onRouteChange("home");
+                }
+              });
           } else {
             setWrongCredentials(true);
             throw new Error(data);
