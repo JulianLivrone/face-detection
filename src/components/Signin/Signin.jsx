@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Loading from "../Loading/Loading";
 import { isEmailValid, isPasswordValid } from "../Utils/Utils";
-import "./Signin.css";
 
 const { REACT_APP_API_URL } = process.env;
 
