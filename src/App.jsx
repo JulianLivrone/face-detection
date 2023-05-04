@@ -1,4 +1,3 @@
-import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
@@ -6,6 +5,8 @@ import FaceDetection from "./components/FaceDetection/FaceDetection";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 import { useState, useEffect } from "react";
+
+import "./App.css";
 
 const { REACT_APP_API_URL } = process.env;
 

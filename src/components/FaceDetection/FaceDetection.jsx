@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./FaceDetection.css";
 
 const FaceDetection = ({ imageUrl, boxes }) => {
