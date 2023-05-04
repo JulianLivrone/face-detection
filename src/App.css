@@ -16,3 +16,10 @@
   height: 40vmin;
   pointer-events: none;
 }
+
+.container-home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+}
